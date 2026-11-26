@@ -65,9 +65,9 @@ public class DatosIniciales implements CommandLineRunner {
                     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.3108985923985!2d-70.6653199!3d-33.4447387!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5a22f3050bd%3A0x1d37c8a6f874c728!2sSantiago%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1710000000000!5m2!1ses!2scl"));
         }
         if (resenas.count() == 0) {
-            resenas.save(resena("Agustin Moya", "Me lo recomendo un amigo, desde entonces yo se lo he recomendado a mis amigos familiares", 5));
-            resenas.save(resena("David Argos", "Llevo durante meses con esta empresa y nunca he tenido un solo problema.", 5));
-            resenas.save(resena("Gonzalo Bustamante", "La gestion y la persona que me atendio fue muy rapido y expedito, lo recomendaria sin dudarlo.", 5));
+            resenas.save(resena("Agustin Moya Rios", "Me lo recomendo un amigo, desde entonces yo se lo he recomendado a mis amigos familiares", 5));
+            resenas.save(resena("David Argos Guzman", "Llevo durante meses con esta empresa y nunca he tenido un solo problema.", 5));
+            resenas.save(resena("Gonzalo Bustamante Isla", "La gestion y la persona que me atendio fue muy rapido y expedito, lo recomendaria sin dudarlo.", 5));
         }
     }
 
