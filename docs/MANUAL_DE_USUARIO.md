@@ -1,7 +1,5 @@
 # Manual de usuario · Mi Espacio
 
-> Cada sección indica el pantallazo que debes tomar y pegar en el lugar marcado como **[Pantallazo]**.
-
 ## 1. Puesta en marcha
 
 1. Inicia el backend (`mvn spring-boot:run` dentro de `backend/`). Al arrancar, la consola muestra el correo y la contraseña del administrador.
