@@ -749,4 +749,7 @@ mi-espacio-fullstack/
 ## Equipo
 
 - Daniel Azócar
-- _(agregar a los demás integrantes)_
+- Angelica Araya
+- Carolina Adaros
+- Alex Guzman
+- Felipe Cid
