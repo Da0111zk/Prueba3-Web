@@ -1,27 +1,19 @@
-# Endpoints CRUD · Mi Espacio (Postman)
-
-> Archivo privado: incluye la contraseña del administrador. No lo subas a GitHub.
+# Endpoints CRUD · Mi Espacio
 
 - **URL base:** `http://localhost:8081`
 - **Swagger:** `http://localhost:8081/swagger-ui.html`
-- **Formato:** JSON. Todas las solicitudes con cuerpo llevan la cabecera `Content-Type: application/json`.
-- **Autenticación:** los endpoints protegidos llevan la cabecera `Authorization: Bearer <token>`.
-
-Para no armar todo a mano, importa `Mi-Espacio.postman_collection.json` en Postman (**Import**). Ya trae estas solicitudes en orden, guarda el token automáticamente y la primera es el login del administrador.
+- **Formato:** JSON (`Content-Type: application/json`)
+- **Autenticación:** `Authorization: Bearer <token>`
 
 ---
 
-## 1. Obtener el token principal (ADMIN)
-
-**Esta es la primera solicitud que debes ejecutar.**
+## 1. Login (ADMIN)
 
 | | |
 | --- | --- |
 | Método | `POST` |
 | URL | `http://localhost:8081/api/auth/login` |
 | Acceso | Público |
-
-**Body** (en Postman: pestaña *Body* → *raw* → tipo *JSON*):
 
 ```json
 {
@@ -34,7 +26,7 @@ Para no armar todo a mano, importa `Mi-Espacio.postman_collection.json` en Postm
 
 ```json
 {
-  "token": "eyJhbGciOi...(texto largo)...",
+  "token": "eyJhbGciOi...",
   "expiraEn": 1764000000000,
   "usuario": {
     "id": 1,
@@ -45,10 +37,7 @@ Para no armar todo a mano, importa `Mi-Espacio.postman_collection.json` en Postm
 }
 ```
 
-### Mostrar y guardar el token en Postman
-
-1. Presiona **Send**: el token aparece en el campo `token` del cuerpo de la respuesta.
-2. Para guardarlo automáticamente, abre la pestaña **Scripts** (o **Tests**) de la solicitud y pega:
+### Guardar el token en Postman (pestaña Scripts / Tests)
 
 ```javascript
 pm.test("Login correcto (200)", function () {
@@ -59,17 +48,16 @@ pm.collectionVariables.set("token", json.token);
 console.log("TOKEN:", json.token);
 ```
 
-3. Para verlo, abre la **Consola de Postman** (`Ctrl+Alt+C`) y busca `TOKEN:`.
-4. Para usarlo en las demás solicitudes, ve a la pestaña **Authorization**, elige **Bearer Token** y escribe `{{token}}`. Si lo prefieres manual, copia el valor de `token` y úsalo como `Authorization: Bearer <token>`.
+Authorization → Bearer Token → `{{token}}`
 
-### El mismo login con PowerShell
+### PowerShell
 
 ```powershell
 $r = Invoke-RestMethod -Method Post -Uri 'http://localhost:8081/api/auth/login' -ContentType 'application/json' -Body '{"email":"admin@miespacio.cl","password":"8UWnspPtUU8MyH"}'
 $r.token
 ```
 
-### El mismo login con curl (Linux, macOS o Git Bash)
+### curl
 
 ```bash
 curl -X POST http://localhost:8081/api/auth/login \
@@ -77,17 +65,11 @@ curl -X POST http://localhost:8081/api/auth/login \
   -d '{"email":"admin@miespacio.cl","password":"8UWnspPtUU8MyH"}'
 ```
 
-Para los ejemplos siguientes: `TOKEN` es el valor del campo `token`.
-
 ---
 
-## 2. Registro de un cliente
+## 2. Registro de cliente
 
-| | |
-| --- | --- |
-| Método y URL | `POST http://localhost:8081/api/auth/registro` |
-| Acceso | Público |
-| Respuesta | 201 con el mismo formato del login (ya trae el token del cliente) |
+`POST http://localhost:8081/api/auth/registro` · Público · Respuesta 201 (mismo formato del login)
 
 ```json
 {
@@ -97,9 +79,7 @@ Para los ejemplos siguientes: `TOKEN` es el valor del campo `token`.
 }
 ```
 
-Errores: 400 (datos inválidos), 409 (el correo ya existe).
-
-Para iniciar sesión como ese cliente después: `POST /api/auth/login` con su correo y contraseña.
+Errores: 400 (datos inválidos), 409 (correo existente).
 
 ---
 
@@ -113,15 +93,7 @@ Para iniciar sesión como ese cliente después: `POST /api/auth/login` con su co
 | Actualizar | `PUT /api/servicios/{id}` | ADMIN |
 | Eliminar | `DELETE /api/servicios/{id}` | ADMIN |
 
-**GET (listar):**
-
-```bash
-curl http://localhost:8081/api/servicios
-```
-
-**GET (uno):** `http://localhost:8081/api/servicios/1`
-
-**POST (crear)**, con `Authorization: Bearer TOKEN`:
+**POST / PUT:**
 
 ```json
 {
@@ -145,9 +117,7 @@ Respuesta 201:
 { "id": 5, "nombre": "Bodega XL", "descripcion": "Bodega de gran tamaño para inventario y mercadería.", "categoria": "Bodega grande", "tamano": "5mt x 5mt", "imagen": "/img/bodega-grande.jpg" }
 ```
 
-**PUT (actualizar)** `PUT /api/servicios/5`: mismo cuerpo del POST con los datos nuevos. Respuesta 200.
-
-**DELETE** `DELETE /api/servicios/5`: respuesta 204 sin cuerpo. Si el servicio tiene cotizaciones asociadas responde 409.
+`PUT` responde 200. `DELETE` responde 204 (409 si tiene cotizaciones asociadas).
 
 ---
 
@@ -161,7 +131,7 @@ Respuesta 201:
 | Actualizar | `PUT /api/sucursales/{id}` | ADMIN |
 | Eliminar | `DELETE /api/sucursales/{id}` | ADMIN |
 
-**POST (crear)**, con `Authorization: Bearer TOKEN`:
+**POST / PUT:**
 
 ```json
 {
@@ -174,7 +144,7 @@ Respuesta 201:
 }
 ```
 
-`PUT /api/sucursales/{id}` recibe el mismo cuerpo. `DELETE` responde 204.
+`DELETE` responde 204.
 
 ---
 
@@ -188,7 +158,7 @@ Respuesta 201:
 | Actualizar | `PUT /api/resenas/{id}` | Autor o ADMIN |
 | Eliminar | `DELETE /api/resenas/{id}` | Autor o ADMIN |
 
-**POST (crear)**, con el token del cliente:
+**POST / PUT:**
 
 ```json
 {
@@ -203,13 +173,11 @@ Respuesta 201:
 { "id": 4, "autor": "Cliente Demo", "texto": "Excelente servicio, muy seguro y con buena atención.", "evaluacion": 5, "fecha": "2026-11-25T10:30:00", "usuarioId": 2 }
 ```
 
-Reglas: `texto` entre 10 y 500 caracteres, `evaluacion` entre 1 y 5. Si el usuario ya publicó una reseña responde 409.
-
-`PUT /api/resenas/{id}` recibe el mismo cuerpo. `DELETE` responde 204.
+Reglas: `texto` 10–500 caracteres, `evaluacion` 1–5. 409 si el usuario ya publicó una reseña. `DELETE` responde 204.
 
 ---
 
-## 6. Cotizaciones (requieren sesión)
+## 6. Cotizaciones
 
 | Operación | Método y URL | Acceso |
 | --- | --- | --- |
@@ -220,7 +188,7 @@ Reglas: `texto` entre 10 y 500 caracteres, `evaluacion` entre 1 y 5. Si el usuar
 | Actualizar | `PUT /api/cotizaciones/{id}` | Dueño (mensaje) o ADMIN (estado) |
 | Eliminar | `DELETE /api/cotizaciones/{id}` | Dueño (solo PENDIENTE) o ADMIN |
 
-**POST (crear)**, con el token del cliente:
+**POST:**
 
 ```json
 {
@@ -244,25 +212,21 @@ Respuesta 201:
 }
 ```
 
-Reglas: `mensaje` entre 10 y 200 caracteres; si ya existe una cotización PENDIENTE del mismo usuario para ese servicio responde 409.
+Reglas: `mensaje` 10–200 caracteres; 409 si ya existe una cotización PENDIENTE del mismo usuario para ese servicio.
 
-**GET (mías):** `GET http://localhost:8081/api/cotizaciones/mis` con el token del cliente.
-
-**GET (todas):** `GET http://localhost:8081/api/cotizaciones` con el token del ADMIN. Con un token de cliente responde 403.
-
-**PUT como cliente (editar mensaje)**, solo si está PENDIENTE:
+**PUT cliente** (solo PENDIENTE):
 
 ```json
 { "mensaje": "Ahora necesito el espacio por 6 meses." }
 ```
 
-**PUT como ADMIN (cambiar estado)**, solo si está PENDIENTE. Valores permitidos: `ATENDIDA` o `RECHAZADA`:
+**PUT ADMIN** (solo PENDIENTE; valores `ATENDIDA` o `RECHAZADA`):
 
 ```json
 { "estado": "ATENDIDA" }
 ```
 
-**DELETE:** responde 204.
+`GET /api/cotizaciones` con token de cliente responde 403. `DELETE` responde 204.
 
 ---
 
@@ -274,22 +238,22 @@ Reglas: `mensaje` entre 10 y 200 caracteres; si ya existe una cotización PENDIE
 | Listar | `GET /api/usuarios` | ADMIN |
 | Eliminar | `DELETE /api/usuarios/{id}` | ADMIN |
 
-`GET /api/usuarios/me` sirve para comprobar que el token es válido. `DELETE` borra también las cotizaciones y reseñas del usuario, y no permite eliminar la propia cuenta (409).
+`DELETE` borra también cotizaciones y reseñas del usuario; no permite eliminar la propia cuenta (409).
 
 ---
 
-## 8. Orden sugerido para probar el CRUD completo
+## 8. Orden para probar el CRUD
 
-1. **Login ADMIN** (sección 1) → guarda `token`.
-2. `GET /api/servicios` → ve el catálogo cargado.
-3. **Registro de cliente** (sección 2) → guarda el token del cliente.
-4. `POST /api/servicios` con el token ADMIN → crea un servicio; luego `PUT` y `DELETE` sobre ese id.
-5. `POST /api/cotizaciones` con el token del cliente → guarda el `id`.
-6. `GET /api/cotizaciones/mis` con el token del cliente.
-7. `GET /api/cotizaciones` con el token ADMIN → ve la cotización del cliente.
-8. `PUT /api/cotizaciones/{id}` con el token ADMIN y `{"estado":"ATENDIDA"}`.
-9. `POST /api/resenas` con el token del cliente.
-10. Prueba un 403: `GET /api/cotizaciones` con el token del cliente.
+1. Login ADMIN → guardar `token`.
+2. `GET /api/servicios`.
+3. Registro de cliente → guardar su token.
+4. `POST /api/servicios` (ADMIN), luego `PUT` y `DELETE` sobre ese id.
+5. `POST /api/cotizaciones` (cliente) → guardar `id`.
+6. `GET /api/cotizaciones/mis` (cliente).
+7. `GET /api/cotizaciones` (ADMIN).
+8. `PUT /api/cotizaciones/{id}` (ADMIN) con `{"estado":"ATENDIDA"}`.
+9. `POST /api/resenas` (cliente).
+10. `GET /api/cotizaciones` con token de cliente → 403.
 
 ## 9. Códigos de respuesta
 
@@ -298,13 +262,11 @@ Reglas: `mensaje` entre 10 y 200 caracteres; si ya existe una cotización PENDIE
 | 200 | Operación correcta |
 | 201 | Recurso creado |
 | 204 | Eliminado (sin cuerpo) |
-| 400 | Datos inválidos (el cuerpo detalla los campos) |
-| 401 | Falta el token, expiró o las credenciales son incorrectas |
-| 403 | El rol no tiene permiso para esa acción |
-| 404 | El recurso no existe |
-| 409 | Conflicto de negocio (correo repetido, cotización pendiente duplicada, etc.) |
-
-Formato de error:
+| 400 | Datos inválidos |
+| 401 | Token ausente, expirado o credenciales incorrectas |
+| 403 | Rol sin permiso |
+| 404 | Recurso inexistente |
+| 409 | Conflicto de negocio |
 
 ```json
 { "status": 409, "mensaje": "Ya tienes una cotización pendiente para este servicio." }
