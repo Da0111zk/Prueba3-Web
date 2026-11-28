@@ -5,7 +5,7 @@
 1. Inicia el backend (`mvn spring-boot:run` dentro de `backend/`). Al arrancar, la consola muestra el correo y la contraseña del administrador.
 2. Inicia el frontend (`npm run dev` dentro de `frontend/`) y abre http://localhost:5173.
 
-![alt text](image.png)
+![alt text](img/image.png)
 ![alt text](img/image-1.png)
 ![alt text](img/image-2.png)
 
