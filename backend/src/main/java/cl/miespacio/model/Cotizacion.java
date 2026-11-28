@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "cotizaciones.")
+@Table(name = "cotizaciones")
 public class Cotizacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ public class Cotizacion {
     @JoinColumn(name = "servicio_id", nullable = false)
     private Servicio servicio;
 
-    @Column(nullable = false, length = 300)
+    @Column(nullable = false, length = 500)
     private String mensaje;
 
     @Enumerated(EnumType.STRING)
